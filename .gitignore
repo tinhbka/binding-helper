@@ -1,0 +1,52 @@
+# Kotlin
+*.kt~
+*.kts~
+
+# Java
+*.class
+
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Signing
+*.jks
+*.keystore
+*.pem
+
+# Local configuration
+local.properties
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# OS / IDE files
+.DS_Store
+*.swp
+*.log
+*.tmp
+*.bak
+*.orig
+
+# Android Studio
+.cxx/
+.externalNativeBuild/
+captures/
+.navigation/
+output.json
+
+# Misc
+*.apk
+*.ap_
+
+# Ignore test coverage reports
+coverage/
+
+# Jetpack Compose preview cache
+*.cache
+
+# JitPack build artifacts
+javadoc/
