@@ -87,7 +87,7 @@ object NotificationHelper {
 
         // Tạo intent để mở activity khi nhấn vào thông báo
         val intent = Intent(context, BindingNotificationManager.mainActivity).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             if (eventName != null) {
 
                 putExtra("eventName", eventName)
