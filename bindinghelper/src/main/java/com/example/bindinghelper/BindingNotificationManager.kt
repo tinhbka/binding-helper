@@ -1,27 +1,53 @@
 package com.example.bindinghelper
 
+import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import java.util.concurrent.TimeUnit
 
 object BindingNotificationManager {
+    internal lateinit var mainActivity: Class<*>
 
-    fun init(context: Context) {
-        val observer = AppLifecycleObserver(context.applicationContext)
+    fun init(context: Context, mainActivity: Class<*>, icon: Int) {
+        val observer = AppLifecycleObserver(context)
+        this.mainActivity = mainActivity
+        NotificationHelper.smallIcon = icon
         ProcessLifecycleOwner.get().lifecycle.addObserver(observer)
     }
 
-    fun scheduleQuitNotification(context: Context) {
-        val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .build()
-
-        WorkManager.getInstance(context).enqueue(workRequest)
+    fun setEnableNotifications(enable: Boolean) {
+        NotificationHelper.enableNotifications = enable
     }
 
-    fun enableQuitNotification(context: Context) {
-        context.startService(Intent(context, NotificationService::class.java))
+    fun buildBackgroundNotification(
+        title: String,
+        message: String,
+    ) {
+        NotificationHelper.backgroundNotificationContent = NotificationContent(
+            notificationId = 100,
+            title = title,
+            message = message,
+        )
+    }
+
+    fun onMainActivityCreated(
+        activity: Activity,
+        onNotificationClicked: ((eventKey: String) -> Unit)? = null
+    ) {
+        val eventName = activity.intent.getStringExtra("eventName")
+        if (eventName != null) {
+            AnalyticLogger.logNotifyEvent(activity, "open_$eventName")
+            onNotificationClicked?.invoke(eventName)
+        }
+    }
+
+    fun onMainActivityNewIntent(
+        activity: Activity,
+        onNotificationClicked: ((eventKey: String) -> Unit)? = null
+    ) {
+        val eventName = activity.intent.getStringExtra("eventName")
+        if (eventName != null) {
+            AnalyticLogger.logNotifyEvent(activity, "open_$eventName")
+            onNotificationClicked?.invoke(eventName)
+        }
     }
 }

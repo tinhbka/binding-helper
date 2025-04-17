@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "664740918622",
+    "project_id": "vtn-flutter-base",
+    "storage_bucket": "vtn-flutter-base.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664740918622:android:b38135c1c2bc3fcfef0bcf",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq-4OYAYYyyH2SavO_6_uI9e2TGeCEMvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664740918622:android:39602ad790f7df20ef0bcf",
+        "android_client_info": {
+          "package_name": "com.vtn.global.base.flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq-4OYAYYyyH2SavO_6_uI9e2TGeCEMvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
