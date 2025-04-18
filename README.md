@@ -2,7 +2,23 @@
 
 Set up thư viện bên Android Native
 
-### 1. Thêm thư viện vào `app/build.gradle`
+### 1. Thêm thư viện
+
+- Thêm jitpack vào `android/build.gradle`
+
+```
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
+    }
+}
+```
+
+- Thêm thư viện vào `android/app/build.gradle`
 
 ```
 implementation("com.github.tinhbka:binding-helper:0.0.7")
