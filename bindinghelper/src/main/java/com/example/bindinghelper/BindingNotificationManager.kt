@@ -61,14 +61,13 @@ object BindingNotificationManager {
     }
 
     fun openNotificationSettings(
-        activity: Activity, callback: (Boolean?) -> Unit
+        activity: Activity,
     ) {
         val checkNotificationPermissionRunnable: Runnable = object : Runnable {
             override fun run() {
                 val notificationManagerCompat = NotificationManagerCompat.from(activity)
                 val isNotificationEnabled = notificationManagerCompat.areNotificationsEnabled()
                 if (isNotificationEnabled) {
-                    callback(true)
                     permissionHandler.removeCallbacks(this)
                     checkPermissionRunnable = null
                     val intent1 = Intent(activity, activity::class.java)
@@ -88,7 +87,6 @@ object BindingNotificationManager {
             permissionHandler.postDelayed(checkNotificationPermissionRunnable, 50)
         } else {
             openAppSettings(activity)
-            callback(null)
         }
     }
 
