@@ -86,7 +86,7 @@ object NotificationHelper {
         notificationManager?.cancel(backgroundNotificationContent!!.notificationId)
 
         // Tạo intent để mở activity khi nhấn vào thông báo
-        val intent = Intent(context, BindingNotificationManager.mainActivity).apply {
+        val intent = Intent(context, BindingNotificationManager.mainActivityClass).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             if (eventName != null) {
 
