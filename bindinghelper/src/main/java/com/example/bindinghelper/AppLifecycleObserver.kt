@@ -15,12 +15,12 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
         super.onPause(owner)
         NotificationHelper.notifyOnAppExit(
             context = context,
-            eventName = "pause_app",
+            eventName = "recent_app",
         )
         NotificationWorker.scheduleUniqueWork(
             context = context,
-            uniqueWorkName = "pause_app_30m",
-            eventName = "pause_app_30m",
+            uniqueWorkName = "recent_app_30m",
+            eventName = "recent_app_30m",
         )
         NotificationWorker.schedulePeriodicWork(
             context = context,
@@ -48,7 +48,7 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        WorkManager.getInstance(context).cancelUniqueWork("pause_app_30m")
+        WorkManager.getInstance(context).cancelUniqueWork("recent_app_30m")
         WorkManager.getInstance(context).cancelAllWorkByTag("repeat_5m")
     }
 }
