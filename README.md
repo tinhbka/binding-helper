@@ -21,7 +21,7 @@ allprojects {
 - Thêm thư viện vào `android/app/build.gradle`
 
 ```
-implementation("com.github.tinhbka:binding-helper:0.0.7")
+implementation("com.github.tinhbka:binding-helper:0.0.8")
 ```
 
 ### 2. Sử dụng
