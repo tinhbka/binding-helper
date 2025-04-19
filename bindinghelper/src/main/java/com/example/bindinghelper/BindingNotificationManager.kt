@@ -38,18 +38,7 @@ object BindingNotificationManager {
         )
     }
 
-    fun onMainActivityCreated(
-        activity: Activity,
-        onNotificationClicked: ((eventKey: String) -> Unit)? = null
-    ) {
-        val eventName = activity.intent.getStringExtra("eventName")
-        if (eventName != null) {
-            AnalyticLogger.logNotifyEvent(activity, "open_$eventName")
-            onNotificationClicked?.invoke(eventName)
-        }
-    }
-
-    fun onMainActivityNewIntent(
+    fun onRestart(
         activity: Activity,
         onNotificationClicked: ((eventKey: String) -> Unit)? = null
     ) {

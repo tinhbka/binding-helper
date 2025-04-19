@@ -49,6 +49,21 @@ class MainApplication : FlutterApplication() {
 <application android:name=".MainApplication" ...
 ```
 
+- Thêm `BindingNotificationManager.onRestart(this)` vào trong hàm `onCreate` và `onNewIntent`
+
+```
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    ...
+    BindingNotificationManager.onRestart(this)
+  }
+
+  override fun onNewIntent(intent: Intent?) {
+    super.onNewIntent(intent)
+    BindingNotificationManager.onRestart(this)
+  }
+```
+
 - Tạo MethodChannel ở MainActivity
 
 ```

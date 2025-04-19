@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.app.R
+import com.example.bindinghelper.BindingNotificationManager
 
 class MainActivity : AppCompatActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
@@ -30,5 +31,6 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
+        BindingNotificationManager.onRestart(this)
     }
 }
