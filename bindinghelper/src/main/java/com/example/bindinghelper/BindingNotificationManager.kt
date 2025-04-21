@@ -43,7 +43,7 @@ object BindingNotificationManager {
         onNotificationClicked: ((eventKey: String) -> Unit)? = null
     ) {
         val eventName = activity.intent.getStringExtra("eventName")
-        if (eventName != null) {
+        if (!eventName.isNullOrEmpty()) {
             AnalyticLogger.logNotifyEvent(activity, "open_$eventName")
             onNotificationClicked?.invoke(eventName)
         }
@@ -86,5 +86,18 @@ object BindingNotificationManager {
             intent.data = Uri.fromParts("package", it.packageName, null)
             it.startActivity(intent)
         }
+    }
+
+
+    fun setupEventsName(
+        exitApp: String? = null,
+        exitApp30m: String? = null,
+        repeat5m: String? = null,
+        exitAppInDay: String? = null,
+    ) {
+        AnalyticLogger.exitApp = exitApp
+        AnalyticLogger.exitApp30m = exitApp30m
+        AnalyticLogger.repeat5m = repeat5m
+        AnalyticLogger.exitAppInDay = exitAppInDay
     }
 }

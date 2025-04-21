@@ -15,18 +15,18 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
         super.onPause(owner)
         NotificationHelper.notifyOnAppExit(
             context = context,
-            eventName = "recent_app",
+            eventName = AnalyticLogger.exitApp,
         )
         NotificationWorker.scheduleUniqueWork(
             context = context,
             uniqueWorkName = "recent_app_30m",
-            eventName = "recent_app_30m",
+            eventName = AnalyticLogger.exitApp30m,
         )
         NotificationWorker.schedulePeriodicWork(
             context = context,
             duration = 5,
             unit = TimeUnit.MINUTES,
-            eventName = "repeat_5m",
+            eventName = AnalyticLogger.repeat5m,
             tag = "repeat_5m"
         )
         scheduleKillAppNotification(1)
@@ -37,12 +37,18 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
     }
 
     private fun scheduleKillAppNotification(day: Long) {
+        val eventName = if (AnalyticLogger.exitAppInDay != null) {
+            "${AnalyticLogger.exitAppInDay}_${day}_day"
+        } else {
+            null
+        };
         NotificationWorker.scheduleUniqueWork(
             context = context,
             uniqueWorkName = "kill_app_${day}_day",
-            eventName = "kill_app_${day}_day",
+            eventName = eventName,
             duration = day,
-            unit = TimeUnit.DAYS
+            unit = TimeUnit.DAYS,
+            tag = "kill_app"
         )
     }
 
@@ -50,5 +56,6 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
         super.onResume(owner)
         WorkManager.getInstance(context).cancelUniqueWork("recent_app_30m")
         WorkManager.getInstance(context).cancelAllWorkByTag("repeat_5m")
+        WorkManager.getInstance(context).cancelAllWorkByTag("kill_app")
     }
 }

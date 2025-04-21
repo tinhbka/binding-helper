@@ -26,7 +26,7 @@ class NotificationWorker(
             duration: Long = 5,
             unit: TimeUnit = TimeUnit.MINUTES,
             tag: String? = null,
-            eventName: String,
+            eventName: String? = null,
         ) {
             val data = workDataOf(
                 "eventName" to eventName,
@@ -54,7 +54,8 @@ class NotificationWorker(
             uniqueWorkName: String,
             duration: Long = 30,
             unit: TimeUnit = TimeUnit.MINUTES,
-            eventName: String,
+            eventName: String? = null,
+            tag: String? = null,
         ) {
 
             val data = workDataOf(
@@ -67,6 +68,9 @@ class NotificationWorker(
                         unit
                     )
                     .setInputData(data)
+            if (tag != null) {
+                worker.addTag(tag)
+            }
 
             WorkManager.getInstance(context).enqueueUniqueWork(
                 uniqueWorkName,
