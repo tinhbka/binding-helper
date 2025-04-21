@@ -19,7 +19,7 @@ class App : Application() {
         BindingNotificationManager.buildBackgroundNotification(
             title = "Hidden App",
             message = "App is running in background",
-            delayInSecond = 5
         )
+        
     }
 }

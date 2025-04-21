@@ -30,13 +30,17 @@ object BindingNotificationManager {
     fun buildBackgroundNotification(
         title: String,
         message: String,
-        delayInSecond: Long = 0,
     ) {
         NotificationHelper.mainContent = NotificationContent(
             notificationId = 100,
             title = title,
             message = message,
         )
+    }
+
+    fun setDelayTime(
+        delayInSecond: Long = 0
+    ) {
         NotificationHelper.delayInSecond = delayInSecond
     }
 
@@ -56,8 +60,7 @@ object BindingNotificationManager {
     }
 
     fun onRestart(
-        activity: Activity,
-        onNotificationClicked: ((eventKey: String) -> Unit)? = null
+        activity: Activity, onNotificationClicked: ((eventKey: String) -> Unit)? = null
     ) {
         val eventName = activity.intent.getStringExtra("eventName")
         if (!eventName.isNullOrEmpty()) {
