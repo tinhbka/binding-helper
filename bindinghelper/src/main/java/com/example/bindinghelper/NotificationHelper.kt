@@ -20,6 +20,8 @@ object NotificationHelper {
 
     internal var backgroundNotificationContent: NotificationContent? = null
 
+    var delayInSecond: Long = 0
+
     var smallIcon: Int? = null
 
     var enableNotifications = false

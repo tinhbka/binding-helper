@@ -30,12 +30,14 @@ object BindingNotificationManager {
     fun buildBackgroundNotification(
         title: String,
         message: String,
+        delayInSecond: Long = 0,
     ) {
         NotificationHelper.backgroundNotificationContent = NotificationContent(
             notificationId = 100,
             title = title,
             message = message,
         )
+        NotificationHelper.delayInSecond = delayInSecond
     }
 
     fun onRestart(
