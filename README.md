@@ -1,11 +1,8 @@
+
 ## Get Started
-
 Set up thư viện bên Android Native
-
 ### 1. Thêm thư viện
-
 - Thêm jitpack vào `android/build.gradle`
-
 ```gradle
 allprojects {
     repositories {
@@ -17,19 +14,14 @@ allprojects {
     }
 }
 ```
-
 - Thêm thư viện vào `android/app/build.gradle`
-
 ```gradle
 implementation("com.github.tinhbka:binding-helper:1.0.0")
 ```
 
 ### 2. Sử dụng
-
 #### Ở Android
-
 - Tạo MainApplication có nội dung như sau
-
 ```kotlin
 class MainApplication : FlutterApplication() {
     override fun onCreate() {
@@ -46,107 +38,105 @@ class MainApplication : FlutterApplication() {
 - Khai báo `MainApplication` ở thẻ `application` trong `AndroidManifest.xml`
 
 ```xml
-
 <application android:name=".MainApplication" ...
 ```
 
 - Thêm `BindingNotificationManager.onRestart(this)` vào trong hàm `onCreate` và `onNewIntent`
-
 ```kotlin
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     ...
     BindingNotificationManager.onRestart(this)
-}
+  }
 
-override fun onNewIntent(intent: Intent?) {
+  override fun onNewIntent(intent: Intent?) {
     super.onNewIntent(intent)
     BindingNotificationManager.onRestart(this)
-}
+  }
 ```
 
 - Tạo MethodChannel ở MainActivity
 
+
 ```kotlin
-  val channel: String = "channel_name"
+  val channel : String = "channel_name"
 
-...
-MethodChannel(
-    flutterEngine.dartExecutor.binaryMessenger, channel
-).setMethodCallHandler(
+  ...
+  MethodChannel(
+      flutterEngine.dartExecutor.binaryMessenger, channel
+  ).setMethodCallHandler(
     { call, result ->
-        when (call.method) {
-            "enableNotification" -> {
-                val isEnable = call.argument<Boolean>("isEnable")
-                BindingNotificationManager.setEnableNotifications(isEnable ?: false)
-                result.success(null)
-            }
-
-            "openNotificationSettings" -> {
-                openNotificationSettings(this)
-                result.success(null)
-            }
-
-            "setNotificationContent" -> {
-                val title = call.argument<String>("title")
-                val message = call.argument<String>("message")
-                if (title != null && message != null) {
-                    BindingNotificationManager.buildBackgroundNotification(
-                        title = title,
-                        message = message
-                    )
-                }
-            }
-            "setTemporaryContent" -> {
-                val title = call.argument<String>("title")
-                val message = call.argument<String>("message")
-                if (title != null && message != null) {
-                    BindingNotificationManager.setTemporaryContent(
-                        title = title,
-                        message = message
-                    )
-                }
-            }
-
-            "clearTemporaryContent" -> {
-                BindingNotificationManager.clearTemporaryContent()
-            }
-
-
-            "setDelayTime" -> {
-                val delayInSecond = call.argument<Long>("delayInSecond")
-                if (delayInSecond != null) {
-                    BindingNotificationManager.setDelayTime(
-                        delayInSecond = delayInSecond
-                    )
-                }
-            }
-
-            "setupEventsName" -> {
-                val exitApp = call.argument<String>("exitApp")
-                val repeat5m = call.argument<String>("repeat5m")
-                val exitAppInDay = call.argument<String>("exitAppInDay")
-                val exitApp30m = call.argument<String>("exitApp30m")
-                BindingNotificationManager.setupEventsName(
-                    exitApp = exitApp,
-                    repeat5m = repeat5m,
-                    exitAppInDay = exitAppInDay,
-                    exitApp30m = exitApp30m,
-                )
-            }
-
-            else -> {
-                result.notImplemented()
-            }
+      when (call.method) {
+        "enableNotification" -> {
+          val isEnable = call.argument<Boolean>("isEnable")
+          BindingNotificationManager.setEnableNotifications(isEnable ?: false)
+          result.success(null)
         }
+
+        "openNotificationSettings" -> {
+          openNotificationSettings(this)
+          result.success(null)
+        }
+
+        "setNotificationContent" -> {
+          val title = call.argument<String>("title")
+          val message = call.argument<String>("message")
+          if (title != null && message != null) {
+            BindingNotificationManager.buildBackgroundNotification(
+              title = title,
+              message = message
+            )
+          }
+        }
+         "setTemporaryContent" -> {
+            val title = call.argument<String>("title")
+            val message = call.argument<String>("message")
+            if (title != null && message != null) {
+              BindingNotificationManager.setTemporaryContent(
+                title = title,
+                message = message
+              )
+            }
+          }
+
+          "clearTemporaryContent" -> {
+            BindingNotificationManager.clearTemporaryContent()
+          }
+
+
+          "setDelayTime" -> {
+            val delayInSecond = call.argument<Long>("delayInSecond")
+            if (delayInSecond != null) {
+              BindingNotificationManager.setDelayTime(
+                delayInSecond = delayInSecond
+              )
+            }
+          }
+
+          "setupEventsName" -> {
+            val exitApp = call.argument<String>("exitApp")
+            val repeat5m = call.argument<String>("repeat5m")
+            val exitAppInDay = call.argument<String>("exitAppInDay")
+            val exitApp30m = call.argument<String>("exitApp30m")
+            BindingNotificationManager.setupEventsName(
+              exitApp = exitApp,
+              repeat5m = repeat5m,
+              exitAppInDay = exitAppInDay,
+              exitApp30m = exitApp30m,
+            )
+          }
+
+        else -> {
+          result.notImplemented()
+        }
+      }
     }
-)
+  )
 ```
 
+
 #### Ở Flutter
-
 Tạo MethodChannel
-
 ```dart
 
 class NativeChannel {
@@ -190,7 +180,6 @@ class NativeChannel {
       logger.e(e);
     }
   }
-
   static Future<void> setTemporaryContent({
     String? title,
     String? message,
@@ -252,7 +241,6 @@ class NativeChannel {
       logger.e(e);
     }
   }
-
   static void setMethodCallHandler() {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
@@ -266,20 +254,16 @@ class NativeChannel {
 
 - Hàm `enableNotification` gọi sau khi check full ads
   Chỉ hiện thông báo ở bản full ads
-
 ```dart
-fullAdCallback: (
-isFullAd) {
-Global.instance.isFullAds = isFullAd;
-if (Global.instance.isFullAds) {
-NativeChannel.enableNotification();
-}
-},
+fullAdCallback: (isFullAd) {
+  Global.instance.isFullAds = isFullAd;
+  if (Global.instance.isFullAds) {
+    NativeChannel.enableNotification();
+  }
+},  
 ```
 
-- Hàm `openNotificationSettings`: Nếu người dùng đã từ chối quyền thông báo 2 lần, lần sau yêu cầu
-  quyền thông báo sẽ không hiện được popup thông báo của hệ thống, gọi hàm`openNotificationSettings`
-  để mở setting thông báo của app
 
-- Hàm `setNotificationContent`: setup nội dung của thông báo, gọi ở màn splash và khi thay đổi ngôn
-  ngữ
+- Hàm `openNotificationSettings`: Nếu người dùng đã từ chối quyền thông báo 2 lần, lần sau yêu cầu quyền thông báo sẽ không hiện được popup thông báo của hệ thống, gọi hàm `openNotificationSettings` để mở setting thông báo của app
+
+- Hàm `setNotificationContent`: setup nội dung của thông báo, gọi ở màn splash và khi thay đổi ngôn ngữ
