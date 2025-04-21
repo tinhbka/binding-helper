@@ -32,12 +32,27 @@ object BindingNotificationManager {
         message: String,
         delayInSecond: Long = 0,
     ) {
-        NotificationHelper.backgroundNotificationContent = NotificationContent(
+        NotificationHelper.mainContent = NotificationContent(
             notificationId = 100,
             title = title,
             message = message,
         )
         NotificationHelper.delayInSecond = delayInSecond
+    }
+
+    fun setTemporaryContent(
+        title: String,
+        message: String,
+    ) {
+        NotificationHelper.temporaryContent = NotificationContent(
+            notificationId = 101,
+            title = title,
+            message = message,
+        )
+    }
+
+    fun clearTemporaryContent() {
+        NotificationHelper.temporaryContent = null
     }
 
     fun onRestart(

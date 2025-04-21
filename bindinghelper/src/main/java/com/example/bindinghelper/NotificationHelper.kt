@@ -18,13 +18,22 @@ object NotificationHelper {
     private const val CHANNEL_ID = "default_channel"
     private const val CHANNEL_NAME = "Default Channel"
 
-    internal var backgroundNotificationContent: NotificationContent? = null
+    internal var mainContent: NotificationContent? = null
+    internal var temporaryContent: NotificationContent? = null
 
     var delayInSecond: Long = 0
 
     var smallIcon: Int? = null
 
     var enableNotifications = false
+
+    fun getContent(): NotificationContent? {
+        return if (temporaryContent != null) {
+            temporaryContent
+        } else {
+            mainContent
+        }
+    }
 
     private fun isEnableNotification(context: Context): Boolean {
         if (!enableNotifications) {
@@ -78,14 +87,15 @@ object NotificationHelper {
         context: Context,
         eventName: String? = null,
     ) {
-        if (!isEnableNotification(context) || backgroundNotificationContent == null) {
+        val content = getContent()
+        if (!isEnableNotification(context) || content == null) {
             return
         }
 
         // Hủy thông báo cũ
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-        notificationManager?.cancel(backgroundNotificationContent!!.notificationId)
+        notificationManager?.cancel(content.notificationId)
 
         // Tạo intent để mở activity khi nhấn vào thông báo
         val intent = Intent(context, BindingNotificationManager.mainActivityClass).apply {
@@ -112,9 +122,9 @@ object NotificationHelper {
         // Tạo thông báo
         pushNotification(
             context,
-            notificationId = backgroundNotificationContent!!.notificationId,
-            title = backgroundNotificationContent!!.title,
-            message = backgroundNotificationContent!!.message,
+            notificationId = content.notificationId,
+            title = content.title,
+            message = content.message,
             pendingIntent = pendingIntent,
         )
     }
