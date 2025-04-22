@@ -60,11 +60,13 @@ object BindingNotificationManager {
     }
 
     fun onRestart(
-        activity: Activity, onNotificationClicked: ((eventKey: String) -> Unit)? = null
+        context: Context,
+        intent: Intent,
+        onNotificationClicked: ((eventKey: String) -> Unit)? = null
     ) {
-        val eventName = activity.intent.getStringExtra("eventName")
+        val eventName = intent.getStringExtra("eventName")
         if (!eventName.isNullOrEmpty()) {
-            AnalyticLogger.logNotifyEvent(activity, "open_$eventName")
+            AnalyticLogger.logNotifyEvent(context, "open_$eventName")
             onNotificationClicked?.invoke(eventName)
         }
     }
