@@ -16,7 +16,7 @@ allprojects {
 ```
 - Thêm thư viện vào `android/app/build.gradle`
 ```gradle
-implementation("com.github.tinhbka:binding-helper:1.0.0")
+implementation("com.github.tinhbka:binding-helper:1.0.1")
 ```
 
 ### 2. Sử dụng
@@ -46,12 +46,12 @@ class MainApplication : FlutterApplication() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     ...
-    BindingNotificationManager.onRestart(this)
+    BindingNotificationManager.onRestart(this, intent)
   }
 
-  override fun onNewIntent(intent: Intent?) {
+  override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
-    BindingNotificationManager.onRestart(this)
+    BindingNotificationManager.onRestart(this, intent)
   }
 ```
 
@@ -74,7 +74,7 @@ class MainApplication : FlutterApplication() {
         }
 
         "openNotificationSettings" -> {
-          openNotificationSettings(this)
+          BindingNotificationManager.openNotificationSettings(this)
           result.success(null)
         }
 
@@ -142,7 +142,7 @@ Tạo MethodChannel
 class NativeChannel {
   NativeChannel._();
 
-  static const _channel = MethodChannel('channel_name');
+  static const _channel = MethodChannel('com.prank.call/flutter');
 
   static Future<void> enableNotification([bool isEnable = true]) async {
     if (!Global.instance.isFullAds) {
@@ -151,7 +151,7 @@ class NativeChannel {
     try {
       _channel.invokeMethod('enableNotification', {'isEnable': isEnable});
     } catch (e) {
-      debugPrint(e.toString());
+      logger.e(e);
     }
   }
 
@@ -159,10 +159,11 @@ class NativeChannel {
     try {
       await _channel.invokeMethod('openNotificationSettings');
     } catch (e) {
-      print('Error opening settings: $e');
+      logger.e(e);
     }
   }
 
+  /// Đặt nội dung cho thông báo
   static Future<void> setNotificationContent() async {
     if (!Global.instance.isFullAds) {
       return;
@@ -172,14 +173,17 @@ class NativeChannel {
       await _channel.invokeMethod(
         'setNotificationContent',
         {
-          'title': appContext.l10n.didYouLogExpenses,
-          'message': appContext.l10n.logExpensesReminder,
+          'title': appContext.l10n.aPrankIsWaiting,
+          'message': appContext.l10n.openAppAndTryIt,
         },
       );
     } catch (e) {
       logger.e(e);
     }
   }
+
+  /// Đặt nội dung tạm thời cho thông báo
+  /// nếu muốn đặt lại nội dung mặc định thì gọi hàm [clearTemporaryContent]
   static Future<void> setTemporaryContent({
     String? title,
     String? message,
@@ -200,6 +204,7 @@ class NativeChannel {
     }
   }
 
+  /// Xóa nội dung tạm thời
   static Future<void> clearTemporaryContent() async {
     try {
       await _channel.invokeMethod('clearTemporaryContent');
@@ -208,6 +213,7 @@ class NativeChannel {
     }
   }
 
+  /// Đặt thời gian delay cho thông báo khi ẩn app
   static Future<void> setDelayTime(int second) async {
     try {
       await _channel.invokeMethod(
@@ -221,26 +227,28 @@ class NativeChannel {
     }
   }
 
-  static Future<void> setupEventsName({
-    String? exitApp,
-    String? repeat5m,
-    String? exitAppInDay,
-    String? exitApp30m,
-  }) async {
+  /// Custom tên cho các event
+  /// THêm 1 key remote cho phép custom tên cho các event, value là
+  /// {
+  ///   "exitApp": "recent_app",
+  ///   "repeat5m": "repeat_5m",
+  ///   "exitAppInDay": "exit_app",
+  ///   "exitApp30m": "recent_app_30m"
+  /// }
+  static Future<void> setupEventsName() async {
+    final data = RemoteConfigManager.instance.notificationEventName;
+    final Map<String, dynamic> json = jsonDecode(data) as Map<String, dynamic>;
     try {
       await _channel.invokeMethod(
         'setupEventsName',
-        {
-          'exitApp': exitApp,
-          'repeat5m': repeat5m,
-          'exitAppInDay': exitAppInDay,
-          'exitApp30m': exitApp30m,
-        },
+        json,
       );
     } catch (e) {
       logger.e(e);
     }
   }
+
+
   static void setMethodCallHandler() {
     _channel.setMethodCallHandler((call) async {
       switch (call.method) {
@@ -250,6 +258,7 @@ class NativeChannel {
     });
   }
 }
+
 ```
 
 - Hàm `enableNotification` gọi sau khi check full ads
@@ -257,9 +266,7 @@ class NativeChannel {
 ```dart
 fullAdCallback: (isFullAd) {
   Global.instance.isFullAds = isFullAd;
-  if (Global.instance.isFullAds) {
-    NativeChannel.enableNotification();
-  }
+  NativeChannel.enableNotification();
 },  
 ```
 
