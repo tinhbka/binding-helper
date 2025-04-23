@@ -274,3 +274,51 @@ fullAdCallback: (isFullAd) {
 - Hàm `openNotificationSettings`: Nếu người dùng đã từ chối quyền thông báo 2 lần, lần sau yêu cầu quyền thông báo sẽ không hiện được popup thông báo của hệ thống, gọi hàm `openNotificationSettings` để mở setting thông báo của app
 
 - Hàm `setNotificationContent`: setup nội dung của thông báo, gọi ở màn splash và khi thay đổi ngôn ngữ
+
+## Luồng thông báo
+- Thông báo chỉ cho hiển thị ở bản full ads
+- Hiển thị popup xin quyền mặc định ở màn splash, nếu user từ chối thì sẽ hiển thị dialog xin quyền của app ở màn home
+
+Tham khảo commit: https://bitbucket.org/innofyapp/ios23-prank-sound/commits/99e47989fec9b5074f281f31c60ff0f5d0fca6e2
+## Remote config
+### 1. `defaultNotificationContent`
+- type: `json`
+- mô tả:  nội dung mặc định của thông báo. vd:
+```json
+{
+  "title": "😏 A prank is waiting...",
+  "message": "Open the app and try it—laugh guaranteed!"
+}
+```
+### 2. `notifiableScreens`
+- type: json (array)
+- mô tả:  khi thoát app ở các màn này sẽ hiển thị thông báo, nếu không có config hoặc value = [] thì tất cả các màn đều có thông báo
+### 3. `notificationDelayTime`
+- type: `number`
+- mô tả: thông báo sẽ bị delay sau khoảng `notificationDelayTime` giây khi ẩn app
+### 4: `notificationEventName`
+- type: `json`
+- mô tả: mặc định thư viện đã log các event show/open thông báo, config này sẽ đổi tên các event mặc định, nếu event là null thì sẽ không log. vd:
+```json
+{
+  "exitApp": "recent_appp",
+  "repeat5m": "repeat_5m",
+  "exitAppInDay": "exit_app",
+  "exitApp30m": "recent_app_30m"
+}
+```
+### 5. `screensNotification`
+- type: `json`
+- mô tả: custom nội dung thông báo riêng cho các màn hình. vd:
+```json
+{
+  "LanguageScreen": {
+    "title": "Language title",
+    "message": "aaaaaa"
+  },
+  "OnboardingScreen": {
+    "title": "Onboarding title",
+    "message": "bbbbbb"
+  }
+}
+```
