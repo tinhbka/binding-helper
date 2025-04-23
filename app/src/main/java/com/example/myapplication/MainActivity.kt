@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
         }
-        BindingNotificationManager.onRestart(this)
+        BindingNotificationManager.onRestart(this, intent)
 
         findViewById<Button>(R.id.setText).setOnClickListener {
             BindingNotificationManager.setTemporaryContent(

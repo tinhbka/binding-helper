@@ -19,6 +19,7 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
             eventName = AnalyticLogger.exitApp,
             duration = NotificationHelper.delayInSecond,
             unit = TimeUnit.SECONDS,
+            useDefaultContent = false,
         )
         NotificationWorker.scheduleUniqueWork(
             context = context,
@@ -27,7 +28,8 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
         )
         NotificationWorker.schedulePeriodicWork(
             context = context,
-            duration = 5,
+            delayDuration = 5,
+            repeatInterval = 5,
             unit = TimeUnit.MINUTES,
             eventName = AnalyticLogger.repeat5m,
             tag = "repeat_5m"

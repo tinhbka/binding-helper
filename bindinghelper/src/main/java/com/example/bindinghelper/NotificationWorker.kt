@@ -23,18 +23,21 @@ class NotificationWorker(
 
         fun schedulePeriodicWork(
             context: Context,
-            duration: Long = 5,
+            delayDuration: Long = 5,
+            repeatInterval: Long = 5,
             unit: TimeUnit = TimeUnit.MINUTES,
             tag: String? = null,
             eventName: String? = null,
+            useDefaultContent: Boolean = true,
         ) {
             val data = workDataOf(
                 "eventName" to eventName,
+                "useDefaultContent" to useDefaultContent,
             )
             val worker =
-                PeriodicWorkRequestBuilder<NotificationWorker>(5, TimeUnit.MINUTES)
+                PeriodicWorkRequestBuilder<NotificationWorker>(repeatInterval, unit)
                     .setInitialDelay(
-                        duration,
+                        delayDuration,
                         unit
                     )  // Đợi 5 phút trước khi chạy lần  đầu tiên (tùy chọn)
                     .setInputData(data)
@@ -56,10 +59,12 @@ class NotificationWorker(
             unit: TimeUnit = TimeUnit.MINUTES,
             eventName: String? = null,
             tag: String? = null,
+            useDefaultContent: Boolean = true,
         ) {
 
             val data = workDataOf(
                 "eventName" to eventName,
+                "useDefaultContent" to useDefaultContent,
             )
             val worker =
                 OneTimeWorkRequestBuilder<NotificationWorker>()
@@ -83,9 +88,15 @@ class NotificationWorker(
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun doWork(): Result {
         val eventName = inputData.getString("eventName")
+        val useDefaultContent = inputData.getBoolean(
+            "useDefaultContent",
+            defaultValue = true
+        )
         NotificationHelper.notifyOnAppExit(
             context = applicationContext,
             eventName = eventName,
+            useDefaultContent = useDefaultContent,
+
         )
 
         return Result.success()

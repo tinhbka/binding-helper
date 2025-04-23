@@ -86,8 +86,13 @@ object NotificationHelper {
     fun notifyOnAppExit(
         context: Context,
         eventName: String? = null,
+        useDefaultContent: Boolean = true,
     ) {
-        val content = getContent()
+        val content = if(useDefaultContent) {
+            mainContent
+        } else {
+            getContent()
+        }
         if (!isEnableNotification(context) || content == null) {
             return
         }
