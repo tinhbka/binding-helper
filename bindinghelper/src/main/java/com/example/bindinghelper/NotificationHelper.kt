@@ -27,7 +27,7 @@ object NotificationHelper {
 
     var smallIcon: Int? = null
 
-    var enableNotifications = false
+    var enableNotifications = true
 
     private fun isEnableNotification(context: Context): Boolean {
         if (!enableNotifications) {
