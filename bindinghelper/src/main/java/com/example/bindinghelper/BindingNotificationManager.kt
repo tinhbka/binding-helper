@@ -27,36 +27,10 @@ object BindingNotificationManager {
         NotificationHelper.enableNotifications = enable
     }
 
-    fun buildBackgroundNotification(
-        title: String,
-        message: String,
-    ) {
-        NotificationHelper.mainContent = NotificationContent(
-            notificationId = 100,
-            title = title,
-            message = message,
-        )
-    }
-
     fun setDelayTime(
         delayInSecond: Long = 0
     ) {
         NotificationHelper.delayInSecond = delayInSecond
-    }
-
-    fun setTemporaryContent(
-        title: String,
-        message: String,
-    ) {
-        NotificationHelper.temporaryContent = NotificationContent(
-            notificationId = 101,
-            title = title,
-            message = message,
-        )
-    }
-
-    fun clearTemporaryContent() {
-        NotificationHelper.temporaryContent = null
     }
 
     fun onRestart(
@@ -72,18 +46,18 @@ object BindingNotificationManager {
     }
 
     fun openNotificationSettings(
-        activity: Activity,
+        context: Context
     ) {
         val checkNotificationPermissionRunnable: Runnable = object : Runnable {
             override fun run() {
-                val notificationManagerCompat = NotificationManagerCompat.from(activity)
+                val notificationManagerCompat = NotificationManagerCompat.from(context)
                 val isNotificationEnabled = notificationManagerCompat.areNotificationsEnabled()
                 if (isNotificationEnabled) {
                     permissionHandler.removeCallbacks(this)
                     checkPermissionRunnable = null
-                    val intent1 = Intent(activity, activity::class.java)
+                    val intent1 = Intent(context, mainActivityClass)
                     intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                    activity.startActivity(intent1)
+                    context.startActivity(intent1)
                 } else {
                     permissionHandler.postDelayed(this, 500)
                 }
@@ -91,20 +65,20 @@ object BindingNotificationManager {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)
-            activity.startActivity(intent)
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            context.startActivity(intent)
 
             // Bắt đầu kiểm tra quyền thông báo
             permissionHandler.postDelayed(checkNotificationPermissionRunnable, 50)
         } else {
-            openAppSettings(activity)
+            openAppSettings(context)
         }
     }
 
-    private fun openAppSettings(activity: Activity) {
+    private fun openAppSettings(context: Context) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
 
-        activity.let {
+        context.let {
             intent.data = Uri.fromParts("package", it.packageName, null)
             it.startActivity(intent)
         }

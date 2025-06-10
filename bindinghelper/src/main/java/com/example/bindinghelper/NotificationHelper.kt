@@ -12,28 +12,22 @@ import android.widget.RemoteViews
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.bindinghelper.model.NotificationConfig
 
 object NotificationHelper {
 
     private const val CHANNEL_ID = "default_channel"
     private const val CHANNEL_NAME = "Default Channel"
 
-    internal var mainContent: NotificationContent? = null
-    internal var temporaryContent: NotificationContent? = null
+    internal var recentContent: NotificationConfig? = null
+    internal var after5MinContent: NotificationConfig? = null
+    internal var after30MinContent: NotificationConfig? = null
 
     var delayInSecond: Long = 0
 
     var smallIcon: Int? = null
 
     var enableNotifications = false
-
-    fun getContent(): NotificationContent? {
-        return if (temporaryContent != null) {
-            temporaryContent
-        } else {
-            mainContent
-        }
-    }
 
     private fun isEnableNotification(context: Context): Boolean {
         if (!enableNotifications) {
@@ -86,21 +80,16 @@ object NotificationHelper {
     fun notifyOnAppExit(
         context: Context,
         eventName: String? = null,
-        useDefaultContent: Boolean = true,
+        notificationContent: NotificationConfig,
     ) {
-        val content = if(useDefaultContent) {
-            mainContent
-        } else {
-            getContent()
-        }
-        if (!isEnableNotification(context) || content == null) {
+        if (!isEnableNotification(context)) {
             return
         }
 
         // Hủy thông báo cũ
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-        notificationManager?.cancel(content.notificationId)
+        notificationManager?.cancel(notificationContent.notificationId)
 
         // Tạo intent để mở activity khi nhấn vào thông báo
         val intent = Intent(context, BindingNotificationManager.mainActivityClass).apply {
@@ -127,9 +116,9 @@ object NotificationHelper {
         // Tạo thông báo
         pushNotification(
             context,
-            notificationId = content.notificationId,
-            title = content.title,
-            message = content.message,
+            notificationId = notificationContent.notificationId,
+            title = notificationContent.title,
+            message = notificationContent.message,
             pendingIntent = pendingIntent,
         )
     }

@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.example.bindinghelper.model.NotificationConfig
 import java.util.concurrent.TimeUnit
 
 class NotificationWorker(
@@ -19,7 +20,6 @@ class NotificationWorker(
 ) :
     Worker(context, workerParams) {
     companion object {
-        const val PERIODIC_WORK_NAME = "MyPeriodicWorker"
 
         fun schedulePeriodicWork(
             context: Context,
@@ -28,25 +28,27 @@ class NotificationWorker(
             unit: TimeUnit = TimeUnit.MINUTES,
             tag: String? = null,
             eventName: String? = null,
-            useDefaultContent: Boolean = true,
+            notificationContent: NotificationConfig? = null,
         ) {
             val data = workDataOf(
                 "eventName" to eventName,
-                "useDefaultContent" to useDefaultContent,
+                "id" to notificationContent?.notificationId,
+                "title" to notificationContent?.title,
+                "message" to notificationContent?.message,
             )
             val worker =
                 PeriodicWorkRequestBuilder<NotificationWorker>(repeatInterval, unit)
                     .setInitialDelay(
                         delayDuration,
                         unit
-                    )  // Đợi 5 phút trước khi chạy lần  đầu tiên (tùy chọn)
+                    )
                     .setInputData(data)
             if (tag != null) {
                 worker.addTag(tag)
             }
 
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-                PERIODIC_WORK_NAME,
+                "MyPeriodicWorker",
                 ExistingPeriodicWorkPolicy.UPDATE,  // Nếu đã có worker này thì cập nhật
                 worker.build()
             )
@@ -59,12 +61,14 @@ class NotificationWorker(
             unit: TimeUnit = TimeUnit.MINUTES,
             eventName: String? = null,
             tag: String? = null,
-            useDefaultContent: Boolean = true,
+            notificationContent: NotificationConfig? = null,
         ) {
 
             val data = workDataOf(
                 "eventName" to eventName,
-                "useDefaultContent" to useDefaultContent,
+                "id" to notificationContent?.notificationId,
+                "title" to notificationContent?.title,
+                "message" to notificationContent?.message,
             )
             val worker =
                 OneTimeWorkRequestBuilder<NotificationWorker>()
@@ -88,15 +92,20 @@ class NotificationWorker(
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun doWork(): Result {
         val eventName = inputData.getString("eventName")
-        val useDefaultContent = inputData.getBoolean(
-            "useDefaultContent",
-            defaultValue = true
-        )
+        val id = inputData.getInt("id", 100)
+        val title = inputData.getString("title")
+        val message = inputData.getString("message")
+        if(title.isNullOrEmpty() || message.isNullOrEmpty()) {
+            return Result.failure()
+        }
         NotificationHelper.notifyOnAppExit(
             context = applicationContext,
             eventName = eventName,
-            useDefaultContent = useDefaultContent,
-
+            notificationContent = NotificationConfig(
+                notificationId = id,
+                title = title,
+                message = message,
+            ),
         )
 
         return Result.success()

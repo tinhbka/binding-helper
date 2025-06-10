@@ -15,16 +15,17 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
         super.onPause(owner)
         NotificationWorker.scheduleUniqueWork(
             context = context,
-            uniqueWorkName = "pause_app",
+            uniqueWorkName = "recent",
             eventName = AnalyticLogger.exitApp,
             duration = NotificationHelper.delayInSecond,
             unit = TimeUnit.SECONDS,
-            useDefaultContent = false,
+            notificationContent = NotificationHelper.recentContent,
         )
         NotificationWorker.scheduleUniqueWork(
             context = context,
-            uniqueWorkName = "recent_app_30m",
+            uniqueWorkName = "after_30_min",
             eventName = AnalyticLogger.exitApp30m,
+            notificationContent =  NotificationHelper.after30MinContent,
         )
         NotificationWorker.schedulePeriodicWork(
             context = context,
@@ -32,36 +33,15 @@ internal class AppLifecycleObserver(private val context: Context) : DefaultLifec
             repeatInterval = 5,
             unit = TimeUnit.MINUTES,
             eventName = AnalyticLogger.repeat5m,
-            tag = "repeat_5m"
-        )
-        scheduleKillAppNotification(1)
-        scheduleKillAppNotification(3)
-        scheduleKillAppNotification(7)
-        scheduleKillAppNotification(15)
-        scheduleKillAppNotification(30)
-    }
-
-    private fun scheduleKillAppNotification(day: Long) {
-        val eventName = if (AnalyticLogger.exitAppInDay != null) {
-            "${AnalyticLogger.exitAppInDay}_${day}_day"
-        } else {
-            null
-        };
-        NotificationWorker.scheduleUniqueWork(
-            context = context,
-            uniqueWorkName = "kill_app_${day}_day",
-            eventName = eventName,
-            duration = day,
-            unit = TimeUnit.DAYS,
-            tag = "kill_app"
+            tag = "after_5_min",
+            notificationContent = NotificationHelper.after5MinContent
         )
     }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        WorkManager.getInstance(context).cancelUniqueWork("recent_app_30m")
-        WorkManager.getInstance(context).cancelUniqueWork("pause_app")
-        WorkManager.getInstance(context).cancelAllWorkByTag("repeat_5m")
-        WorkManager.getInstance(context).cancelAllWorkByTag("kill_app")
+        WorkManager.getInstance(context).cancelUniqueWork("recent")
+        WorkManager.getInstance(context).cancelAllWorkByTag("after_5_min")
+        WorkManager.getInstance(context).cancelUniqueWork("after_30_min")
     }
 }
