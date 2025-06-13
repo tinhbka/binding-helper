@@ -9,7 +9,11 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 
-class NotificationCallHandler(private val context: Context, messenger: BinaryMessenger) :
+class NotificationCallHandler(
+    private val context: Context,
+    messenger: BinaryMessenger,
+    val extraMethods: Map<String, (MethodCall, Result) -> Unit>? = null
+) :
     MethodChannel.MethodCallHandler {
     private val permissionHandler = Handler(Looper.getMainLooper())
     private var checkPermissionRunnable: Runnable? = null
@@ -28,10 +32,12 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                 BindingNotificationManager.setEnableNotifications(isEnable ?: false)
                 result.success(null)
             }
+
             "openNotificationSettings" -> {
                 BindingNotificationManager.openNotificationSettings(context)
                 result.success(null)
             }
+
             "setRecentContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
@@ -45,6 +51,7 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                     )
                 }
             }
+
             "setAfter5mContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
@@ -58,6 +65,7 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                     )
                 }
             }
+
             "setAfter30mContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
@@ -71,6 +79,7 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                     )
                 }
             }
+
             "setDelayTime" -> {
                 val delayInSecond = call.argument<Int>("delayInSecond")
                 if (delayInSecond != null) {
@@ -79,6 +88,7 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                     )
                 }
             }
+
             "setupEventsName" -> {
                 val exitApp = call.argument<String>("exitApp")
                 val repeat5m = call.argument<String>("repeat5m")
@@ -91,8 +101,9 @@ class NotificationCallHandler(private val context: Context, messenger: BinaryMes
                     exitApp30m = exitApp30m,
                 )
             }
+
             else -> {
-                result.notImplemented()
+                extraMethods?.get(call.method)?.invoke(call, result) ?: result.notImplemented()
             }
 
         }
