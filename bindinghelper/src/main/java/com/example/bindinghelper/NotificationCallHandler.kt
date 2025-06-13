@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 class NotificationCallHandler(
     private val context: Context,
     messenger: BinaryMessenger,
-    val extraMethods: Map<String, (MethodCall, Result) -> Unit>? = null
+    private val extraMethods: Map<String, (MethodCall, MethodChannel.Result) -> Unit>? = null
 ) :
     MethodChannel.MethodCallHandler {
     private val permissionHandler = Handler(Looper.getMainLooper())
