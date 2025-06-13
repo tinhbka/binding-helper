@@ -15,10 +15,7 @@ class NotificationCallHandler(
     private val extraMethods: Map<String, (MethodCall, MethodChannel.Result) -> Unit>? = null
 ) :
     MethodChannel.MethodCallHandler {
-    private val permissionHandler = Handler(Looper.getMainLooper())
-    private var checkPermissionRunnable: Runnable? = null
-
-    private val channel = MethodChannel(messenger, "com.notification.helper/api")
+    val channel = MethodChannel(messenger, "com.notification.helper/api")
 
     init {
         channel.setMethodCallHandler(this)
