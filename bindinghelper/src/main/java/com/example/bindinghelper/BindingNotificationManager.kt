@@ -91,9 +91,10 @@ object BindingNotificationManager {
         repeat5m: String? = null,
         exitAppInDay: String? = null,
     ) {
-        AnalyticLogger.exitApp = exitApp
-        AnalyticLogger.exitApp30m = exitApp30m
-        AnalyticLogger.repeat5m = repeat5m
-        AnalyticLogger.exitAppInDay = exitAppInDay
+
+        AnalyticLogger.exitApp = exitApp ?: "exit_app"
+        AnalyticLogger.exitApp30m = exitApp30m ?: "exit_app_30m"
+        AnalyticLogger.repeat5m = repeat5m ?: "repeat_5m"
+        AnalyticLogger.exitAppInDay = exitAppInDay ?: "exit_app_after_day"
     }
 }
