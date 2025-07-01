@@ -57,7 +57,7 @@ class NotificationCallHandler(
                     NotificationHelper.after5MinContent = NotificationConfig(
                         title = title,
                         message = message,
-                        notificationId = 101,
+                        notificationId = 100,
                         enableNotification = enable
                     )
                 }
@@ -71,7 +71,7 @@ class NotificationCallHandler(
                     NotificationHelper.after30MinContent = NotificationConfig(
                         title = title,
                         message = message,
-                        notificationId = 102,
+                        notificationId = 100,
                         enableNotification = enable
                     )
                 }
