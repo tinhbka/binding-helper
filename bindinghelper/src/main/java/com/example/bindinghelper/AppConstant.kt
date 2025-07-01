@@ -1,6 +1,5 @@
 package com.example.bindinghelper
 
 object AppConstant {
-    var blockNotification = false
-    var isFullAds = false
+    var notificationTriggerInterval: Int = 0
 }

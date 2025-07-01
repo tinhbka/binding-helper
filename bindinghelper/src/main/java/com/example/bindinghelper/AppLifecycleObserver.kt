@@ -9,18 +9,24 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
 internal class AppLifecycleObserver(private val context: Context) : DefaultLifecycleObserver {
-
+    private var appHideCount: Int = 0
+    private var isFirstTime: Boolean = true
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        NotificationWorker.scheduleUniqueWork(
-            context = context,
-            uniqueWorkName = "recent",
-            eventName = AnalyticLogger.exitApp,
-            duration = NotificationHelper.delayInSecond,
-            unit = TimeUnit.SECONDS,
-            notificationContent = NotificationHelper.recentContent,
-        )
+        appHideCount++
+        if(isFirstTime || appHideCount == AppConstant.notificationTriggerInterval + 1) {
+            NotificationWorker.scheduleUniqueWork(
+                context = context,
+                uniqueWorkName = "recent",
+                eventName = AnalyticLogger.exitApp,
+                duration = NotificationHelper.delayInSecond,
+                unit = TimeUnit.SECONDS,
+                notificationContent = NotificationHelper.recentContent,
+            )
+            appHideCount = 0
+            isFirstTime = false
+        }
         NotificationWorker.scheduleUniqueWork(
             context = context,
             uniqueWorkName = "after_30_min",

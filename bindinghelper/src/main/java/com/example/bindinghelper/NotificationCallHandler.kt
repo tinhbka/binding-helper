@@ -86,6 +86,13 @@ class NotificationCallHandler(
                 }
             }
 
+            "setTriggerInterval" -> {
+                val triggerInterval = call.argument<Int>("triggerInterval")
+                if (triggerInterval != null) {
+                    AppConstant.notificationTriggerInterval = triggerInterval
+                }
+            }
+
             "setupEventsName" -> {
                 val exitApp = call.argument<String>("exitApp")
                 val repeat5m = call.argument<String>("repeat5m")
