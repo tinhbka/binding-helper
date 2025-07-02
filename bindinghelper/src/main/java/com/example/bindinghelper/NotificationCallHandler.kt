@@ -35,7 +35,7 @@ class NotificationCallHandler(
 
             "setRecentContent" -> {
                 val title = call.argument<String>("title")
-                val message = call.argument<String>("message")
+                val message = call.argument<String>("content")
                 val enable = call.argument<Boolean>("enable_notification") ?: true
                 val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
                 val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
@@ -53,7 +53,7 @@ class NotificationCallHandler(
 
             "setAfter5mContent" -> {
                 val title = call.argument<String>("title")
-                val message = call.argument<String>("message")
+                val message = call.argument<String>("content")
                 val enable = call.argument<Boolean>("enable_notification") ?: true
                 val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
                 val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
@@ -71,7 +71,7 @@ class NotificationCallHandler(
 
             "setAfter30mContent" -> {
                 val title = call.argument<String>("title")
-                val message = call.argument<String>("message")
+                val message = call.argument<String>("content")
                 val enable = call.argument<Boolean>("enable_notification") ?: true
                 val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
                 val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
