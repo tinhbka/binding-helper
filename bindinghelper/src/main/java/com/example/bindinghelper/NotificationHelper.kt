@@ -23,8 +23,6 @@ object NotificationHelper {
     internal var after5MinContent: NotificationConfig? = null
     internal var after30MinContent: NotificationConfig? = null
 
-    var delayInSecond: Long = 0
-
     var smallIcon: Int? = null
 
     var enableNotifications = true

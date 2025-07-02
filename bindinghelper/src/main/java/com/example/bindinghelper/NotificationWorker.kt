@@ -23,7 +23,7 @@ class NotificationWorker(
 
         fun schedulePeriodicWork(
             context: Context,
-            delayDuration: Long = 5,
+            delayDuration: Int = 5,
             repeatInterval: Long = 5,
             unit: TimeUnit = TimeUnit.MINUTES,
             tag: String? = null,
@@ -39,7 +39,7 @@ class NotificationWorker(
             val worker =
                 PeriodicWorkRequestBuilder<NotificationWorker>(repeatInterval, unit)
                     .setInitialDelay(
-                        delayDuration,
+                        delayDuration.toLong(),
                         unit
                     )
                     .setInputData(data)
@@ -57,7 +57,7 @@ class NotificationWorker(
         fun scheduleUniqueWork(
             context: Context,
             uniqueWorkName: String,
-            duration: Long = 30,
+            duration: Int = 30,
             unit: TimeUnit = TimeUnit.MINUTES,
             eventName: String? = null,
             tag: String? = null,
@@ -73,7 +73,7 @@ class NotificationWorker(
             val worker =
                 OneTimeWorkRequestBuilder<NotificationWorker>()
                     .setInitialDelay(
-                        duration,
+                        duration.toLong(),
                         unit
                     )
                     .setInputData(data)

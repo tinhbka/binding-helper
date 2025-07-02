@@ -1,8 +1,6 @@
 package com.example.bindinghelper
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.example.bindinghelper.model.NotificationConfig
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
@@ -38,13 +36,17 @@ class NotificationCallHandler(
             "setRecentContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
-                val enable = call.argument<Boolean>("enableNotification") ?: true
+                val enable = call.argument<Boolean>("enable_notification") ?: true
+                val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
+                val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
                 if (title != null && message != null) {
                     NotificationHelper.recentContent = NotificationConfig(
                         title = title,
                         message = message,
                         notificationId = 100,
-                        enableNotification = enable
+                        enableNotification = enable,
+                        delayInSecond = delayInSecond,
+                        triggerInterval = triggerInterval
                     )
                 }
             }
@@ -52,13 +54,17 @@ class NotificationCallHandler(
             "setAfter5mContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
-                val enable = call.argument<Boolean>("enableNotification") ?: true
+                val enable = call.argument<Boolean>("enable_notification") ?: true
+                val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
+                val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
                 if (title != null && message != null) {
                     NotificationHelper.after5MinContent = NotificationConfig(
                         title = title,
                         message = message,
                         notificationId = 100,
-                        enableNotification = enable
+                        enableNotification = enable,
+                        delayInSecond = delayInSecond,
+                        triggerInterval = triggerInterval
                     )
                 }
             }
@@ -66,30 +72,18 @@ class NotificationCallHandler(
             "setAfter30mContent" -> {
                 val title = call.argument<String>("title")
                 val message = call.argument<String>("message")
-                val enable = call.argument<Boolean>("enableNotification") ?: true
+                val enable = call.argument<Boolean>("enable_notification") ?: true
+                val delayInSecond = call.argument<Int>("delay_in_second") ?: 0
+                val triggerInterval = call.argument<Int>("trigger_interval") ?: 0
                 if (title != null && message != null) {
                     NotificationHelper.after30MinContent = NotificationConfig(
                         title = title,
                         message = message,
                         notificationId = 100,
-                        enableNotification = enable
+                        enableNotification = enable,
+                        delayInSecond = delayInSecond,
+                        triggerInterval = triggerInterval
                     )
-                }
-            }
-
-            "setDelayTime" -> {
-                val delayInSecond = call.argument<Int>("delayInSecond")
-                if (delayInSecond != null) {
-                    BindingNotificationManager.setDelayTime(
-                        delayInSecond = delayInSecond.toLong()
-                    )
-                }
-            }
-
-            "setTriggerInterval" -> {
-                val triggerInterval = call.argument<Int>("triggerInterval")
-                if (triggerInterval != null) {
-                    AppConstant.notificationTriggerInterval = triggerInterval
                 }
             }
 

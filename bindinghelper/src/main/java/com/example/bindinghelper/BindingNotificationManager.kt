@@ -27,12 +27,6 @@ object BindingNotificationManager {
         NotificationHelper.enableNotifications = enable
     }
 
-    fun setDelayTime(
-        delayInSecond: Long = 0
-    ) {
-        NotificationHelper.delayInSecond = delayInSecond
-    }
-
     fun onRestart(
         context: Context,
         intent: Intent,

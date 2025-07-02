@@ -5,4 +5,6 @@ data class NotificationConfig(
     val message: String,
     val enableNotification: Boolean = true,
     val notificationId: Int,
+    val delayInSecond: Int = 0,
+    val triggerInterval: Int = 0
 )
